@@ -101,11 +101,13 @@ export default function Dashboard() {
     {
       key: 'runway',
       label: 'Runway',
-      value: formatRunway(summary.forecastRunway),
+      value: formatRunway(summary.forecastRunway, summary.netBurn),
       sub:
-        summary.simpleRunwayMonths === null
-          ? 'No net burn over the next 3 months'
-          : `Simple runway ${formatMonths(summary.simpleRunwayMonths)} at the next 3-month average burn`,
+        summary.forecastRunway.kind === 'cash_flow_positive' && summary.netBurn > 0 && summary.simpleRunwayMonths !== null
+          ? `≈ ${formatMonths(summary.simpleRunwayMonths)} at current burn`
+          : summary.simpleRunwayMonths === null
+            ? 'No net burn over the next 3 months'
+            : `Simple runway ${formatMonths(summary.simpleRunwayMonths)} at the next 3-month average burn`,
       tone:
         summary.forecastRunway.kind === 'months' && summary.forecastRunway.months < 3
           ? ('danger' as const)

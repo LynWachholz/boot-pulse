@@ -192,7 +192,7 @@ For each month *m* in the forecast:
 - **Closing cash(m)** = Opening cash(m) + Net cash flow(m); Opening cash(m+1) = Closing cash(m)
 - **Net burn(m)** = max(0, Costs(m) − Revenue(m))
 - **Simple runway** = Current cash ÷ average net burn of the next 3 months (shown for transparency)
-- **Forecast runway** = number of months until projected closing cash first falls below zero. If cash never falls below zero within the forecast, show "Cash-flow positive within forecast" instead of a number.
+- **Forecast runway display:** if monthly revenue is greater than or equal to monthly costs (net burn is zero), show **"Cash-flow positive"**. If net burn is positive but closing cash remains above zero for all 12 forecast months, show **"12+ months"** with the subline **"≈ X months at current burn"**, where *X* is the simple runway (current cash ÷ average net burn of the next 3 months). Otherwise, show the number of months until projected closing cash reaches or falls below zero, as before. Apply the same wording and subline rule to each scenario in the comparison table.
 
 Scenario adjustments are applied on top of the base inputs: percentage adjustments scale revenue or costs from their start month; "add" adjustments behave like an extra revenue or expense item.
 

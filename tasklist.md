@@ -117,8 +117,8 @@
   - Verification Gate (VISUAL): no layout overflow except intentionally scrollable tables.
 - [x] **6.5** Final quality gate: run build, all tests, and click through the core journey (PRD 3.2) end to end.
   - Verification Gate (BUILD + TEST + DEV): all pass with zero console errors.
-- [ ] **6.6** Push to GitHub `main` and deploy to Vercel (preset auto-detected as Vite, no environment variables).
-  - Verification Gate: live `*.vercel.app` URL loads; `/dashboard` deep link works; demo business opens.
+- [ ] **6.6** Push the project to the user's new private GitHub repository `LynWachholz/boot-pulse` on branch `main`, including `PRD.md`, `tasklist.md` and `README.md` in the repo root. Do not deploy to Vercel.
+  - Verification Gate: private repository exists at the requested URL, branch `main` contains the app and required documents.
 
 ---
 
@@ -165,7 +165,7 @@ Chromium harness (Puppeteer + Lighthouse) run against the production build serve
 | 2.6 | TEST | Zero burn → `null`; cash-flow positive → `cash_flow_positive`; runway below 3 months → 1 month |
 | 2.7 | TEST | Cautious = revenue −20 % / costs +10 %; Growth = +15 % / +5 %; all four adjustment types; "hire" shortens runway |
 | 2.8 | TEST | One test per rule: runway critical, runway risk, rising costs, falling revenue (plus a healthy case) |
-| 2.9 | TEST | `seed.test.ts` documents the manual spreadsheet check; the seeded month-12 cash of 16,900 ¢ is reproduced by the app |
+| 2.9 | TEST | `seed.test.ts` documents the manual spreadsheet check; the seeded month-12 cash of USD 16,900 is reproduced by the app |
 | 2.10 | DATA | Revenue item, scenario and profile survive a full page reload (`localStorage["bootpulse:v1"]`) |
 
 ### Module 3 — Local profiles & protected routes
@@ -212,15 +212,12 @@ Chromium harness (Puppeteer + Lighthouse) run against the production build serve
 | 6.3 | Lighthouse | Accessibility 100 / 100 / 100 on `/`, `/dashboard` and `/scenarios` (gate: ≥ 90); 2 px accent focus rings, labels on all inputs, keyboard-only operation verified |
 | 6.4 | VISUAL | No horizontal overflow on any of the 13 routes at 1440 × 900 or 375 × 667 (only tables scroll, by design) |
 | 6.5 | BUILD + TEST + DEV | `npm run build` 0 TS errors; 54/54 unit tests pass; core journey (landing → Try the demo → dashboard → scenario) completes with zero console errors |
-| 6.6 | — | Not completed. Pushing to GitHub and deploying to Vercel needs the user's own GitHub and Vercel accounts (no connector is enabled in this session). The repository is committed locally and `vercel.json` is in place, so the deploy is a two-command step once access is granted. |
+| 6.6 | — | Pending. Push to the requested new private GitHub repository after the final code and documentation checks; no Vercel deployment is requested. |
 
 ### Notes for the reviewer
 
-- **Seeded runway reads "Cash-flow positive within forecast".** PRD 5.2 defines forecast runway as the
-  number of months until closing cash first falls below zero, and shows that text when it never does.
-  The demo business burns about USD 2,650/month against USD 48,000 of cash, so it survives all 12
-  forecast months — the literal rule therefore produces the text, not a number. The KPI's
-  "How is this calculated?" panel also shows the simple runway (19.9 months) for transparency, and any
-  real added cost (for example the "Hire freelancer" scenario) produces a numeric runway.
+- **Runway display follows the corrected PRD 5.2 rule.** The demo burns USD 2,650/month but survives
+  the forecast, so it shows "12+ months" and the approximate simple-runway subline, rather than
+  incorrectly labelling the business cash-flow positive.
 - **Verification harness.** The audit scripts live outside the delivered project (`/home/ubuntu/audit`)
   so the repository stays free of test-only dependencies.

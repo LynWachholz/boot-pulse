@@ -238,14 +238,14 @@ export function simpleRunway(currentCash: Cents, averageBurn: Cents): number | n
 }
 
 /**
- * Forecast runway = number of months until projected closing cash first falls below zero.
- * If cash never falls below zero inside the forecast, the business is cash-flow positive
- * within the forecast window (PRD 5.2).
+ * Forecast runway = number of months until projected closing cash reaches or falls below zero.
+ * A forecast that remains above zero is only described as cash-flow positive when current
+ * monthly revenue covers current monthly costs; otherwise its runway exceeds the forecast.
  */
 export function forecastRunway(rows: CashFlowRow[]): RunwayResult {
   if (rows.length === 0) return { kind: 'cash_flow_positive' }
   if (rows[0].openingCash < 0) return { kind: 'months', months: 0 }
-  const index = rows.findIndex((row) => row.closingCash < 0)
+  const index = rows.findIndex((row) => row.closingCash <= 0)
   if (index === -1) return { kind: 'cash_flow_positive' }
   return { kind: 'months', months: index + 1 }
 }
@@ -255,9 +255,11 @@ export function runwayMonthsOrInfinity(result: RunwayResult): number {
   return result.kind === 'months' ? result.months : Number.POSITIVE_INFINITY
 }
 
-/** Human-readable runway, used by KPIs, tables and the comparison view. */
-export function formatRunway(result: RunwayResult): string {
-  if (result.kind === 'cash_flow_positive') return 'Cash-flow positive within forecast'
+/** Human-readable runway, used by KPIs, scenario cards and the comparison table. */
+export function formatRunway(result: RunwayResult, currentNetBurn = 0): string {
+  if (result.kind === 'cash_flow_positive') {
+    return currentNetBurn > 0 ? '12+ months' : 'Cash-flow positive'
+  }
   if (result.months === 0) return '0 months — cash is already negative'
   return `${result.months} ${result.months === 1 ? 'month' : 'months'}`
 }

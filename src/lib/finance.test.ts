@@ -172,12 +172,29 @@ describe('forecastRunway', () => {
     expect(forecastRunway(rows)).toEqual({ kind: 'months', months: 1 })
   })
 
-  it('reports "cash-flow positive within forecast" when cash never goes negative', () => {
+  it('reports the cash-flow-positive state when cash never reaches zero and monthly revenue covers costs', () => {
     const rows = cashFlowTable(
       input({ openingCash: 1_000_000, revenue: [revenue({ amount: 200_000 })], expenses: [expense({ amount: 150_000 })] }),
     )
     expect(forecastRunway(rows)).toEqual({ kind: 'cash_flow_positive' })
-    expect(formatRunway({ kind: 'cash_flow_positive' })).toBe('Cash-flow positive within forecast')
+    expect(formatRunway({ kind: 'cash_flow_positive' }, 0)).toBe('Cash-flow positive')
+  })
+
+  it('reports 12+ months when positive burn remains funded throughout the forecast', () => {
+    const rows = cashFlowTable(
+      input({ openingCash: 4_800_000, revenue: [revenue({ amount: 520_000 })], expenses: [expense({ amount: 785_000 })] }),
+    )
+    const runway = forecastRunway(rows)
+    expect(runway).toEqual({ kind: 'cash_flow_positive' })
+    expect(formatRunway(runway, rows[0].netBurn)).toBe('12+ months')
+    expect(simpleRunway(rows[0].openingCash, averageNetBurn(rows, 3))).toBeCloseTo(18.1132, 3)
+  })
+
+  it('counts a month when closing cash reaches exactly zero', () => {
+    const rows = cashFlowTable(
+      input({ openingCash: 100_000, revenue: [], expenses: [expense({ amount: 100_000 })] }),
+    )
+    expect(forecastRunway(rows)).toEqual({ kind: 'months', months: 1 })
   })
 })
 
@@ -394,6 +411,7 @@ describe('summarise and scenarioTotals', () => {
     expect(summary.monthlyCosts).toBe(785_000)
     expect(summary.netBurn).toBe(265_000)
     expect(summary.forecastRunway).toEqual({ kind: 'cash_flow_positive' })
+    expect(formatRunway(summary.forecastRunway, summary.netBurn)).toBe('12+ months')
   })
 
   it('reports month 12 closing cash and total burn for comparisons', () => {

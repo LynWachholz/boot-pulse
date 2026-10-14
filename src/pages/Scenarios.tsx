@@ -18,7 +18,7 @@ import { IconEdit, IconPlus, IconTrash } from '../components/icons'
 import { useBusinessForecast, forecastForScenario } from '../hooks/useBusinessForecast'
 import { useStore } from '../store/useStore'
 import type { Adjustment, AdjustmentType, Scenario } from '../types'
-import { formatMoney, parseAmount } from '../lib/money'
+import { formatMoney, formatMonths, parseAmount } from '../lib/money'
 import { formatMonthLabel, isMonth } from '../lib/months'
 import { createPresetAdjustments, formatRunway, scenarioTotals } from '../lib/finance'
 
@@ -225,7 +225,7 @@ export default function Scenarios() {
                         >
                           <span className="block text-sm font-semibold text-neutral-900">{scenario.name}</span>
                           <span className="block text-xs text-neutral-600">
-                            {formatRunway(summary.forecastRunway)} ·{' '}
+                            {formatRunway(summary.forecastRunway, summary.netBurn)} ·{' '}
                             {scenario.adjustments.length} adjustment
                             {scenario.adjustments.length === 1 ? '' : 's'}
                           </span>
@@ -405,7 +405,16 @@ export default function Scenarios() {
                           <th scope="row" className="td text-left font-medium text-neutral-900">
                             {entry.scenario.name}
                           </th>
-                          <td className="td num">{formatRunway(entry.summary.forecastRunway)}</td>
+                          <td className="td num">
+                            {formatRunway(entry.summary.forecastRunway, entry.summary.netBurn)}
+                            {entry.summary.forecastRunway.kind === 'cash_flow_positive' &&
+                            entry.summary.netBurn > 0 &&
+                            entry.summary.simpleRunwayMonths !== null ? (
+                              <span className="block text-xs font-normal text-neutral-600">
+                                ≈ {formatMonths(entry.summary.simpleRunwayMonths)} at current burn
+                              </span>
+                            ) : null}
+                          </td>
                           <td className={`td num ${totals.month12Cash < 0 ? 'text-danger' : ''}`}>
                             {formatMoney(totals.month12Cash, currency)}
                           </td>

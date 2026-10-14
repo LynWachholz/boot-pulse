@@ -212,7 +212,7 @@ Chromium harness (Puppeteer + Lighthouse) run against the production build serve
 | 6.3 | Lighthouse | Accessibility 100 / 100 / 100 on `/`, `/dashboard` and `/scenarios` (gate: ≥ 90); 2 px accent focus rings, labels on all inputs, keyboard-only operation verified |
 | 6.4 | VISUAL | No horizontal overflow on any of the 13 routes at 1440 × 900 or 375 × 667 (only tables scroll, by design) |
 | 6.5 | BUILD + TEST + DEV | `npm run build` 0 TS errors; 54/54 unit tests pass; core journey (landing → Try the demo → dashboard → scenario) completes with zero console errors |
-| 6.6 | — | Pending. Push to the requested new private GitHub repository after the final code and documentation checks; no Vercel deployment is requested. |
+| 6.6 | — | Not completed. `gh repo create LynWachholz/boot-pulse --private` was denied by GitHub: `LynWachholz does not have the correct permissions to execute CreateRepository (createRepository)`. Repository creation and push are blocked; task remains unchecked. No Vercel deployment was attempted. |
 
 ### Notes for the reviewer
 
